@@ -1,0 +1,9 @@
+build/
+cmake-build-*/
+*.exe
+*.dSYM/
+.vs/
+.vscode/
+.idea/
+output.txt
+.DS_Store
