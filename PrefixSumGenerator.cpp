@@ -1,6 +1,7 @@
 #include "PrefixSumGenerator.h"
 #include <limits>
 #include <stdexcept>
+#include <algorithm>
 
 PrefixSumGenerator::PrefixSumGenerator(const std::vector<Item>& items, std::uint32_t seed) : engine_(seed) {
     if (items.empty()) {
@@ -28,5 +29,7 @@ PrefixSumGenerator::PrefixSumGenerator(const std::vector<Item>& items, std::uint
 }
 
 int PrefixSumGenerator::operator()() {
-    throw std::logic_error("PrefixSumGenerator::operator(): not implemented yet");
+    const std::uint64_t random_value = dist_(engine_);
+    const auto it = std::upper_bound(cumulative_.begin(), cumulative_.end(), random_value);
+    return values_[static_cast<std::size_t>(it - cumulative_.begin())];
 }
