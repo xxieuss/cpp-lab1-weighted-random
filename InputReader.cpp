@@ -14,6 +14,15 @@ T read_value(std::istream& in, const std::string& field) {
     return value;
 }
 
+std::uint64_t read_positive(std::istream& in, const std::string& field) {
+    const long long value = read_value<long long>(in, field);
+    if (value <= 0) {
+        throw std::invalid_argument(
+            "поле '" + field + "' має бути натуральним числом, отримано " + std::to_string(value));
+    }
+    return static_cast<std::uint64_t>(value);
+}
+
 }
 
 InputData read_input(const std::string& path) {
@@ -23,16 +32,16 @@ InputData read_input(const std::string& path) {
     }
 
     InputData data;
-    data.n = read_value<std::uint64_t>(file, "n");
-    const auto k = read_value<std::size_t>(file, "k");
+    data.n = read_positive(file, "n");
+    const std::uint64_t k = read_positive(file, "k");
 
-    data.items.resize(k);
+    data.items.resize(static_cast<std::size_t>(k));
     for (auto& item : data.items) {
         item.value = read_value<int>(file, "вхідне число");
     }
 
     for (auto& item : data.items) {
-        item.weight = read_value<std::uint64_t>(file, "частота");
+        item.weight = read_positive(file, "частота");
     }
 
     return data;
