@@ -1,4 +1,5 @@
 #pragma once
+#include <cmath>
 #include <cstdint>
 #include <numeric>
 #include <stdexcept>
@@ -57,6 +58,15 @@ ExperimentResult run_experiment(Generator& generator, std::uint64_t n, const std
         result.weights.push_back(items[i].weight);
         result.expected.push_back(share(items[i].weight, total));
         result.observed.push_back(share(counts[i], n));
+    }
+
+    result.worst_value = result.values.front();
+    for (std::size_t i = 0; i < items.size(); ++i) {
+        const double deviation = std::abs(result.expected[i] - result.observed[i]);
+        if (deviation > result.max_deviation) {
+            result.max_deviation = deviation;
+            result.worst_value = result.values[i];
+        }
     }
 
     return result;
