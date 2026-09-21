@@ -1,5 +1,6 @@
 #pragma once
 #include <cstdint>
+#include <numeric>
 #include <stdexcept>
 #include <unordered_map>
 #include <vector>
@@ -23,6 +24,10 @@ ExperimentResult run_experiment(Generator& generator, std::uint64_t n, const std
         throw std::invalid_argument("run_experiment: n має бути натуральним");
     }
 
+    const std::uint64_t total = std::accumulate(
+        items.begin(), items.end(), std::uint64_t{0},
+        [](std::uint64_t sum, const Item& item) { return sum + item.weight; });
+
     std::unordered_map<int, std::size_t> index_of;
     index_of.reserve(items.size());
     for (std::size_t i = 0; i < items.size(); ++i) {
@@ -38,14 +43,20 @@ ExperimentResult run_experiment(Generator& generator, std::uint64_t n, const std
         ++counts[found->second];
     }
 
+    const auto share = [](std::uint64_t part, std::uint64_t whole) {
+        return static_cast<double>(part) / static_cast<double>(whole);
+    };
+
     ExperimentResult result;
     result.values.reserve(items.size());
     result.weights.reserve(items.size());
+    result.expected.reserve(items.size());
     result.observed.reserve(items.size());
     for (std::size_t i = 0; i < items.size(); ++i) {
         result.values.push_back(items[i].value);
         result.weights.push_back(items[i].weight);
-        result.observed.push_back(static_cast<double>(counts[i]) / static_cast<double>(n));
+        result.expected.push_back(share(items[i].weight, total));
+        result.observed.push_back(share(counts[i], n));
     }
 
     return result;
