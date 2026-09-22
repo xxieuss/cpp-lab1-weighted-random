@@ -9,10 +9,9 @@ namespace {
 template <typename T>
 T read_value(std::istream& in, const std::string& field) {
     T value{};
-    if (!(in >> value)) {
-        throw std::invalid_argument("не вдалося зчитати поле '" + field + "'");
-    }
-    return value;
+    if (in >> value) return value;
+    if (in.eof()) throw std::invalid_argument("файл обірвано, очікувалося: " + field);
+    throw std::invalid_argument("замість числа у полі '" + field + "' знайдено інший текст");
 }
 
 std::uint64_t read_positive(std::istream& in, const std::string& field) {
@@ -24,13 +23,20 @@ std::uint64_t read_positive(std::istream& in, const std::string& field) {
     return static_cast<std::uint64_t>(value);
 }
 
+void ensure_nothing_left(std::istream& in) {
+    std::string extra;
+    if (in >> extra) {
+        throw std::invalid_argument("після частот у файлі є зайві дані: " + extra);
+    }
+}
+
 void ensure_values_are_distinct(const std::vector<Item>& items) {
     std::vector<Item> sorted = items;
     std::ranges::sort(sorted);
 
     const auto duplicate = std::ranges::adjacent_find(sorted);
     if (duplicate != sorted.end()) {
-        throw std::invalid_argument( "вхідні числа мають бути різними, повторюється " + std::to_string(duplicate->value));
+        throw std::invalid_argument("вхідні числа мають бути різними, повторюється " + std::to_string(duplicate->value));
     }
 }
 
@@ -55,6 +61,7 @@ InputData read_input(const std::string& path) {
         item.weight = read_positive(file, "частота");
     }
 
+    ensure_nothing_left(file);
     ensure_values_are_distinct(data.items);
 
     return data;
