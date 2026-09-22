@@ -8,6 +8,7 @@
 #include "Item.h"
 
 struct ExperimentResult {
+    std::uint64_t samples{};
     std::vector<int> values;
     std::vector<std::uint64_t> weights;
     std::vector<double> expected;
@@ -49,6 +50,7 @@ ExperimentResult run_experiment(Generator& generator, std::uint64_t n, const std
     };
 
     ExperimentResult result;
+    result.samples = n;
     result.values.reserve(items.size());
     result.weights.reserve(items.size());
     result.expected.reserve(items.size());
