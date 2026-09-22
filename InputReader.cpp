@@ -2,6 +2,7 @@
 #include <fstream>
 #include <stdexcept>
 #include <string>
+#include <algorithm>
 
 namespace {
 
@@ -21,6 +22,16 @@ std::uint64_t read_positive(std::istream& in, const std::string& field) {
             "поле '" + field + "' має бути натуральним числом, отримано " + std::to_string(value));
     }
     return static_cast<std::uint64_t>(value);
+}
+
+void ensure_values_are_distinct(const std::vector<Item>& items) {
+    std::vector<Item> sorted = items;
+    std::ranges::sort(sorted);
+
+    const auto duplicate = std::ranges::adjacent_find(sorted);
+    if (duplicate != sorted.end()) {
+        throw std::invalid_argument( "вхідні числа мають бути різними, повторюється " + std::to_string(duplicate->value));
+    }
 }
 
 }
@@ -43,6 +54,8 @@ InputData read_input(const std::string& path) {
     for (auto& item : data.items) {
         item.weight = read_positive(file, "частота");
     }
+
+    ensure_values_are_distinct(data.items);
 
     return data;
 }
