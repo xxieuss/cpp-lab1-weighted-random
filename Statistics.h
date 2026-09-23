@@ -13,6 +13,7 @@ struct ExperimentResult {
     std::vector<std::uint64_t> weights;
     std::vector<double> expected;
     std::vector<double> observed;
+    std::vector<double> deviations;
     double max_deviation{};
     int worst_value{};
 };
@@ -62,9 +63,11 @@ ExperimentResult run_experiment(Generator& generator, std::uint64_t n, const std
         result.observed.push_back(share(counts[i], n));
     }
 
+    result.deviations.reserve(items.size());
     result.worst_value = result.values.front();
     for (std::size_t i = 0; i < items.size(); ++i) {
         const double deviation = std::abs(result.expected[i] - result.observed[i]);
+        result.deviations.push_back(deviation);
         if (deviation > result.max_deviation) {
             result.max_deviation = deviation;
             result.worst_value = result.values[i];
