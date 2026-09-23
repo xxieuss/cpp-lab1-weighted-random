@@ -52,9 +52,8 @@ InputData read_input(const std::string& path) {
     data.n = read_positive(file, "n");
     const std::uint64_t k = read_positive(file, "k");
 
-    data.items.resize(static_cast<std::size_t>(k));
-    for (auto& item : data.items) {
-        item.value = read_value<int>(file, "вхідне число");
+    for (std::uint64_t i = 0; i < k; ++i) {
+        data.items.push_back(Item{read_value<int>(file, "вхідне число"), 0});
     }
 
     for (auto& item : data.items) {
