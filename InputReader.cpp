@@ -62,6 +62,7 @@ InputData read_input(const std::string& path) {
 
     ensure_nothing_left(file);
     ensure_values_are_distinct(data.items);
+    sum_of_weights(data.items);
 
     return data;
 }
