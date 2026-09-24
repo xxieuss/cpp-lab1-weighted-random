@@ -3,6 +3,7 @@
 #include <stdexcept>
 #include <string>
 #include <algorithm>
+#include <functional>
 
 namespace {
 
@@ -32,9 +33,9 @@ void ensure_nothing_left(std::istream& in) {
 
 void ensure_values_are_distinct(const std::vector<Item>& items) {
     std::vector<Item> sorted = items;
-    std::ranges::sort(sorted);
+    std::ranges::sort(sorted, std::less<Item>{});
 
-    const auto duplicate = std::ranges::adjacent_find(sorted);
+    const auto duplicate = std::ranges::adjacent_find(sorted, std::equal_to<Item>{});
     if (duplicate != sorted.end()) {
         throw std::invalid_argument("вхідні числа мають бути різними, повторюється " + std::to_string(duplicate->value));
     }
