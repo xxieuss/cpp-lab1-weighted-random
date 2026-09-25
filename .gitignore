@@ -5,5 +5,4 @@ cmake-build-*/
 .vs/
 .vscode/
 .idea/
-output.txt
 .DS_Store
