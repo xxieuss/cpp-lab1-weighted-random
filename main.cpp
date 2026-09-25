@@ -1,3 +1,5 @@
+// Standard: C++23. Compiler: Apple Clang 17 (-std=c++23).
+
 #include <exception>
 #include <iostream>
 #include <random>
