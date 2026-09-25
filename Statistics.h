@@ -1,6 +1,8 @@
 #pragma once
+#include <algorithm>
 #include <cmath>
 #include <cstdint>
+#include <functional>
 #include <numeric>
 #include <stdexcept>
 #include <unordered_map>
@@ -16,6 +18,7 @@ struct ExperimentResult {
     std::vector<double> deviations;
     double max_deviation{};
     int worst_value{};
+    std::size_t worst_index{};
 };
 
 template <typename Generator>
@@ -63,16 +66,16 @@ ExperimentResult run_experiment(Generator& generator, std::uint64_t n, const std
         result.observed.push_back(share(counts[i], n));
     }
 
-    result.deviations.reserve(items.size());
-    result.worst_value = result.values.front();
-    for (std::size_t i = 0; i < items.size(); ++i) {
-        const double deviation = std::abs(result.expected[i] - result.observed[i]);
-        result.deviations.push_back(deviation);
-        if (deviation > result.max_deviation) {
-            result.max_deviation = deviation;
-            result.worst_value = result.values[i];
-        }
-    }
+    result.deviations.resize(items.size());
+    std::ranges::transform(result.expected, result.observed, result.deviations.begin(), 
+    [](double expected, double observed) {
+        return std::abs(expected - observed);
+    });
+
+    const auto worst = std::ranges::max_element(result.deviations, std::less<double>{});
+    result.worst_index = static_cast<std::size_t>(worst - result.deviations.begin());
+    result.max_deviation = *worst;
+    result.worst_value = result.values[result.worst_index];
 
     return result;
 }
