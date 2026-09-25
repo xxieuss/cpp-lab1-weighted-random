@@ -14,16 +14,17 @@ void print_comparison(const ExperimentResult& custom, const ExperimentResult& li
     for (std::size_t i = 0; i < custom.values.size(); ++i) {
         std::cout << "\nЧисло " << custom.values[i]
         << ", вага " << custom.weights[i] << '\n'
-        << "  задана частота:          " << custom.expected[i] << '\n'
-        << "  власний алгоритм:        " << custom.observed[i]
+        << "  задана частота:            " << custom.expected[i] << '\n'
+        << "  отримана частота:\n"
+        << "    власний алгоритм:        " << custom.observed[i]
         << "  (розбіжність " << custom.deviations[i] << ")\n"
-        << "  discrete_distribution:   " << library.observed[i]
+        << "    discrete_distribution:   " << library.observed[i]
         << "  (розбіжність " << library.deviations[i] << ")\n";
     }
 
-    std::cout << "\nНайбільша розбіжність:\n"
-    << "  власний алгоритм: " << custom.max_deviation
+    std::cout << "\nНайбільша розбіжність частот:\n"
+    << "  власний алгоритм:        " << custom.max_deviation
     << " (число " << custom.worst_value << ")\n"
-    << "  discrete_distribution: " << library.max_deviation
+    << "  discrete_distribution:   " << library.max_deviation
     << " (число " << library.worst_value << ")\n";
 }
