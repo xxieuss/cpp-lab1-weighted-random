@@ -3,7 +3,6 @@
 #include <cmath>
 #include <cstdint>
 #include <functional>
-#include <numeric>
 #include <stdexcept>
 #include <unordered_map>
 #include <vector>
@@ -30,9 +29,7 @@ ExperimentResult run_experiment(Generator& generator, std::uint64_t n, const std
         throw std::invalid_argument("run_experiment: n має бути натуральним");
     }
 
-    const std::uint64_t total = std::accumulate(
-        items.begin(), items.end(), std::uint64_t{0},
-        [](std::uint64_t sum, const Item& item) { return sum + item.weight; });
+    const std::uint64_t total = sum_of_weights(items);
 
     std::unordered_map<int, std::size_t> index_of;
     index_of.reserve(items.size());

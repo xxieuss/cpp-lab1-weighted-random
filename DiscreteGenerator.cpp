@@ -6,14 +6,13 @@ DiscreteGenerator::DiscreteGenerator(const std::vector<Item>& items, std::uint32
         throw std::invalid_argument("DiscreteGenerator: порожній список елементів");
     }
 
+    sum_of_weights(items);
+
     values_.reserve(items.size());
     std::vector<double> weights;
     weights.reserve(items.size());
 
     for (const Item& item : items) {
-        if (item.weight == 0) {
-            throw std::invalid_argument("DiscreteGenerator: частота має бути додатною");
-        }
         values_.push_back(item.value);
         weights.push_back(static_cast<double>(item.weight));
     }
