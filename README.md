@@ -67,5 +67,5 @@ clang++ -std=c++23 main.cpp InputReader.cpp PrefixSumGenerator.cpp DiscreteGener
 
 ## Розподіл обов'язків
 
-- **Студент A:** `Item`, `PrefixSumGenerator`, `InputReader`, тестові дані.
-- **Студент B:** `DiscreteGenerator`, `Statistics`, `Report`, `main`.
+- **Студент Anna Kondriuk:** `Item`, `PrefixSumGenerator`, `InputReader`, тестові дані.
+- **Студент Nikita Koba:** `DiscreteGenerator`, `Statistics`, `Report`, `main`.
